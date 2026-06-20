@@ -51,9 +51,9 @@ Download and install the AMD package repository.
 Example working package:
 
 ```bash
-wget https://repo.radeon.com/amdgpu-install/7.2.1/ubuntu/noble/amdgpu-install_7.2.1.70201-1_all.deb
+ wget https://repo.radeon.com/amdgpu-install/7.2/ubuntu/noble/amdgpu-install_7.2.70200-1_all.deb
 
-sudo apt install ./amdgpu-install_7.2.1.70201-1_all.deb
+sudo apt install ./amdgpu-install_7.2.70200-1_all.deb
 ```
 
 Install ROCm userspace components:
