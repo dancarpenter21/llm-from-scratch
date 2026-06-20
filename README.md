@@ -20,6 +20,7 @@ This document describes a working setup for running PyTorch on an AMD Radeon RX 
 ![26.6.1](docs/Adrenaline-26.6.1.png)
 - WSL2
 - Ubuntu 24.04 LTS
+  In Powershell run `> wsl --install Ubuntu-24.04 --name <name>`
 - ROCm 7.2
 - ROCDXG
 - Python 3.12
