@@ -294,8 +294,34 @@ HSA_ENABLE_DXG_DETECTION=1
 
 Successful verification:
 
-```text
-torch.cuda.is_available() == True
-torch.cuda.device_count() == 1
-torch.cuda.get_device_name(0) == "AMD Radeon RX 9070 XT"
+Use scripts/check_radeon_9070xt_pytorch.py to verify Torch is working with AMD GPU.
+
+```
+$ python check_radeon_9070xt_pytorch.py
+```
+
+Should output something like:
+
+```
+== PyTorch build ==
+torch.__version__     : 2.9.1+rocm7.2.3.gitebc02d69
+torch.version.cuda    : None
+torch.version.hip     : 7.2.53211-c2d9476115
+Load librocdxg.so successully!
+Load all DTIF APIs OK!
+torch.cuda.is_available(): True
+
+== Detected devices ==
+cuda:0: AMD Radeon RX 9070 XT
+  total memory: 15.81 GiB
+  capability  : (12, 0)
+
+== Radeon RX 9070 XT match ==
+Matched cuda:0: AMD Radeon RX 9070 XT
+Smoke test on cuda:0 passed; checksum=1094.457886
+
+Result: PyTorch can use the selected device through torch.cuda.
+Backend: ROCm/HIP, exposed through PyTorch's CUDA API.
+Warning: Resource leak detected by SharedSignalPool, 2 Signals leaked.
+Unload librocdxg.so successully!
 ```
