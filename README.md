@@ -23,6 +23,7 @@ This document describes a working setup for running PyTorch on an AMD Radeon RX 
   - In Powershell run `> wsl --install Ubuntu-24.04 --name <name>`
 - ROCm 7.2
 - ROCDXG
+  - cmake
 - Python 3.12
 - uv
 - PyTorch 2.9.1
@@ -95,6 +96,12 @@ Inside WSL this path becomes:
 ```
 
 #### Build
+
+Install cmake:
+
+```bash
+sudo apt install cmake
+```
 
 ```bash
 export win_sdk="/mnt/c/Program Files (x86)/Windows Kits/10/Include/10.0.28000.0"
