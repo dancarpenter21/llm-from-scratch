@@ -2,6 +2,25 @@
 
 Me learning LLM from scratch.
 
+## Install Project Dependencies
+
+The project uses `uv` and pins the validated ROCm PyTorch packages in
+`pyproject.toml`.
+
+For the standard project environment:
+
+```bash
+uv sync
+source .venv/bin/activate
+```
+
+If you already have a different virtual environment activated and want to
+install into that environment instead:
+
+```bash
+uv sync --active
+```
+
 ## AMD Radeon RX 9070 XT + PyTorch + ROCm 7.2 + ROCDXG on WSL2
 
 This document describes a working setup for running PyTorch on an AMD Radeon RX 9070 XT inside WSL2 using ROCm 7.2, ROCDXG, and a `uv` managed Python virtual environment.
