@@ -16,6 +16,8 @@ This document describes a working setup for running PyTorch on an AMD Radeon RX 
 #### Software
 
 - Windows 11
+- Adrenaline 26.6.1
+  ![26.6.1](docs/Adrenaline-26.6.1.png)
 - WSL2
 - Ubuntu 24.04 LTS
 - ROCm 7.2
