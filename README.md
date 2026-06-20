@@ -8,7 +8,7 @@ This document describes a working setup for running PyTorch on an AMD Radeon RX 
 
 ### Environment
 
-#### Hardware
+#### Tested Hardware
 
 - GPU: AMD Radeon RX 9070 XT
 - CPU: AMD Ryzen 7 9800X3D
