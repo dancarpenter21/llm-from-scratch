@@ -284,6 +284,7 @@ This warning did not prevent successful GPU execution.
 
 ```text
 Windows 11
+Adrenaline 26.6.1
 WSL2 Ubuntu 24.04
 AMD Radeon RX 9070 XT
 ROCm 7.2
