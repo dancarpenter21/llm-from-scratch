@@ -21,6 +21,11 @@ install into that environment instead:
 uv sync --active
 ```
 
+To run, use:
+```bash
+uv run --active jupyter notebook
+```
+
 ## AMD Radeon RX 9070 XT + PyTorch + ROCm 7.2 + ROCDXG on WSL2
 
 This document describes a working setup for running PyTorch on an AMD Radeon RX 9070 XT inside WSL2 using ROCm 7.2, ROCDXG, and a `uv` managed Python virtual environment.
