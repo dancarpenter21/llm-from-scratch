@@ -5,21 +5,32 @@
 
 import re
 import torch
+import tiktoken
 import urllib.request
 
 from pathlib import Path
+from tiktoken import Encoding
 
-from llm_scratch.tokenizer import SimpleTokenizerV1, SimpleTokenizerV2
+from llm_scratch import (
+    SimpleTokenizerV1,
+    SimpleTokenizerV2,
+    create_dataloader_v1,
+    get_default_device,
+    move_batch_to_device,
+)
 
 
 ########################################################################################
 # CUDA checks
-if torch.cuda.is_available():
+device = get_default_device()
+print("Using device:", device)
+
+if device.type == "cuda":
     print("CUDA Available!")
     print("Device Name:", torch.cuda.get_device_name(0))
     
-    # Verify it is working by pushing a tensor to the GPU and doing math
-    cuda_device_tensor = torch.tensor([1.0, 2.0]).cuda()
+    # Reusable pattern: create standalone tensors directly on the selected device.
+    cuda_device_tensor = torch.tensor([1.0, 2.0], device=device)
     print("Test Tensor on GPU:", cuda_device_tensor)
     print("Calculation Success!", cuda_device_tensor + cuda_device_tensor)
 else:
@@ -106,3 +117,104 @@ print()
 
 ########################################################################################
 # BPE tokenizer
+tokenizer: Encoding = tiktoken.get_encoding("gpt2")   # vocabulary of 50,257 byte pairs
+
+text = (
+    "Hello, do you like tea? <|endoftext|> In the sunlit terraces"
+    "of someunknownPlace."
+)
+integers = tokenizer.encode(text, allowed_special={"<|endoftext|>"})
+print("bpe ids:", integers)
+
+strings = tokenizer.decode(integers)
+print("bpe text:", strings)
+
+# Let's turn BPE on the-verdict
+enc_text = tokenizer.encode(verdict_text)
+print("len of verdict bpe:", len(enc_text))
+
+# take a 51 token sample for demonstration
+enc_sample = enc_text[50:]
+
+# sliding window of 4 tokens
+context_size = 4
+x = enc_sample[:context_size]
+y = enc_sample[1:context_size+1]
+print(f"x: {x}")
+print(f"y:      {y}")
+print()
+
+print("Illustrate next word prediction tasks")
+for i in range(1, context_size+1):
+    context = enc_sample[:i]
+    desired = enc_sample[i]
+    print(context, "---->", desired)
+
+print()
+
+print("Test the dataloader with a batch size of 1 for an LLM with a context size of 4 to develop an intuition")
+# these parameters will create tensors of 1 row (batch size) of length 4 (max length), that shifts by 1 (stride) from batch to batch
+dataloader = create_dataloader_v1(
+    verdict_text,
+    batch_size=1,
+    max_length=4,
+    stride=1,
+    shuffle=False,
+    pin_memory=device.type == "cuda",
+)
+data_iter = iter(dataloader)
+# Reusable pattern: DataLoader batches start on CPU; move each batch at the boundary.
+first_batch = move_batch_to_device(next(data_iter), device)
+print("first batch:", first_batch)
+
+# To understand the meaning of stride=1, let’s fetch another batch from this dataset:
+# notice how second batch X is the same as first batch Y
+second_batch = move_batch_to_device(next(data_iter), device)
+print("second batch:", second_batch)
+print()
+
+dataloader = create_dataloader_v1(
+    verdict_text,
+    batch_size=2,
+    max_length=8,
+    stride=1,
+    shuffle=False,
+    pin_memory=device.type == "cuda",
+)
+data_iter = iter(dataloader)
+first_batch = move_batch_to_device(next(data_iter), device)
+print("first batch:", first_batch)
+second_batch = move_batch_to_device(next(data_iter), device)
+print("second batch:", second_batch)
+print()
+
+dataloader = create_dataloader_v1(
+    verdict_text,
+    batch_size=8,
+    max_length=4,
+    stride=2,
+    shuffle=False,
+    pin_memory=device.type == "cuda",
+)
+data_iter = iter(dataloader)
+first_batch = move_batch_to_device(next(data_iter), device)
+print("first batch:")
+print(first_batch[0])
+print(first_batch[1])
+second_batch = move_batch_to_device(next(data_iter), device)
+print("second batch:")
+print(second_batch[0])
+print(second_batch[1])
+print()
+
+########################################################################################
+# Creating token embeddings
+# Reusable pattern: pass device=... for tensors created outside a DataLoader.
+input_ids = torch.tensor([2, 3, 5, 1], device=device)
+
+# these are arbitrary hyper parameters to fiddle with
+vocab_size = 6
+output_dim = 3
+
+print()
+print()
