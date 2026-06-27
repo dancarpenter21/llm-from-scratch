@@ -14,3 +14,10 @@ dependencies = [
 
 [tool.uv]
 find-links = ["https://repo.radeon.com/rocm/manylinux/rocm-rel-7.2.3/"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["llm_scratch"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
