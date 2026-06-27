@@ -210,11 +210,42 @@ print()
 ########################################################################################
 # Creating token embeddings
 # Reusable pattern: pass device=... for tensors created outside a DataLoader.
-input_ids = torch.tensor([2, 3, 5, 1], device=device)
 
 # these are arbitrary hyper parameters to fiddle with
 vocab_size = 6
 output_dim = 3
+
+# intializes a random tensor as a 6 row (each item in the vocab) 3 column matrix
+# but this embedding is unintialized and random small values
+torch.manual_seed(123)
+embedding_layer = torch.nn.Embedding(vocab_size, output_dim)
+print(embedding_layer.weight)
+
+print("item [3]:", embedding_layer(torch.tensor([3])))
+
+input_ids = torch.tensor([2, 3, 5, 1])
+# gets the embedding vector for each token id
+print(embedding_layer(input_ids))
+print()
+print()
+
+########################################################################################
+# Encoding word positions with bigger embedding space
+vocab_size = 50257  # gpt 2 size
+output_dim = 256    # encode the input tokens into a 256-dimensional vector representation
+token_embedding_layer = torch.nn.Embedding(vocab_size, output_dim, device=device)
+
+max_length = 4
+dataloader = create_dataloader_v1(verdict_text,
+                                  batch_size=8,
+                                  max_length=max_length,
+                                  stride=max_length,
+                                  shuffle=False,
+                                  pin_memory=device.type == "cuda")
+data_iter = iter(dataloader)
+inputs, targets = next(data_iter)
+print("Token IDs:\n", inputs)
+print("\nInputs shape:\n", inputs.shape)
 
 print()
 print()
